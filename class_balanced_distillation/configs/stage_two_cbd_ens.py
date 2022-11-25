@@ -58,7 +58,7 @@ def get_config():
   config.trial = 0  # dummy for repeated runs.
 
   # Distillation parameters
-  model_dir = "/home/user/class_balanced_distillation/data/models/"
+  model_dir = "/home/vojtechmolek/repos/unproportional/google-research/class_balanced_distillation/data/models"
   model_ids = [
       "vanilla_seed1"
   ]

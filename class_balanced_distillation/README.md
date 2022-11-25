@@ -30,7 +30,7 @@ To reproduce the results for `CBD`, the first stage is run with the following co
 
 ```
 # from google-research/
-python -m class_balanced_distillation.run --config class_balanced_distillation/configs/stage_one_vanilla_seed1.py --workdir /home/user/class_balanced_distillation/data/models/
+python -m class_balanced_distillation.run --config class_balanced_distillation/configs/stage_one_vanilla_seed1.py --workdir /home/user/class_balanced_distillation/data/models/vanilla_seed1
 ```
 
 Once the training for the first stage finishes, you can run the following command for the second stage:
