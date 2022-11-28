@@ -26,6 +26,7 @@ import numpy as np
 import simclr.tf2.data_util as simclr_data
 import tensorflow as tf
 import tensorflow_datasets as tfds
+from class_balanced_distillation.unprop import unproportional
 
 
 def random_color_jitter(image, p=1.0):
@@ -138,7 +139,8 @@ def decode_and_random_resized_crop(image, rng,
 
 
 def train_preprocess(features,
-                     add_jitter = False):
+                     add_jitter = False,
+                     unprop = None):
   """Processes a single example for training."""
   image = features["image"]
   label = features["label"]
@@ -150,6 +152,13 @@ def train_preprocess(features,
 
   image = decode_and_random_resized_crop(image, rng_crop, resize_size=224)
   image = tf.image.stateless_random_flip_left_right(image, rng_flip)
+  
+  if unprop:
+    image_shape = image.shape
+    image = tf.numpy_function(unproportional, (image, *unprop), image.dtype, name="unprop")
+    # numpy function discards shape info and crashes training, this will restore it
+    image.set_shape(image_shape)
+    
 
   if add_jitter:
     image = random_color_jitter(image)
@@ -191,12 +200,12 @@ def create_datasets(
   if config.dataset == "imagenet-lt":
     dataset_builder = (
         tfds.builder("imagenet_lt",
-                     data_dir="~/data/imagenet-lt/tfds/"))
+                     data_dir="/raid/data/datasets/imagenet-lt/tfds/"))
 
   elif config.dataset == "inaturalist18":
     dataset_builder = (
         tfds.builder("i_naturalist2018",
-                     data_dir="~/data/inaturalist18/tfds/"))
+                     data_dir="/raid/data/datasets/inaturalist18/tfds/"))
 
   else:
     raise ValueError(f"Dataset {config.dataset} not supported.")
@@ -269,7 +278,7 @@ def create_datasets(
     raise ValueError(f"Sampling {config.sampling} not supported.")
 
   train_preprocess_fn = functools.partial(
-      train_preprocess, add_jitter=config.add_color_jitter)
+      train_preprocess, add_jitter=config.add_color_jitter, unprop=config.unprop)
 
   train_ds = deterministic_data.create_distributed_dataset(
       dataset_builder,

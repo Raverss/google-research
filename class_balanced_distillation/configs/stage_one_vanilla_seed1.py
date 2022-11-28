@@ -28,6 +28,7 @@ def get_config():
   config.sampling = "uniform"
 
   config.add_color_jitter = False
+  config.unprop = None
   config.loss = "ce"
 
   config.learning_rate = 0.1

@@ -28,7 +28,7 @@ def get_config():
   config.sampling = "class_balanced"
 
   config.add_color_jitter = False
-  config.unprop = None
+  config.unprop = [1.18, 5, 7, 0.1]
   config.loss = "ce"
 
   config.learning_rate = 0.1
@@ -59,7 +59,7 @@ def get_config():
   config.trial = 0  # dummy for repeated runs.
 
   # Distillation parameters
-  model_dir = "/home/user/class_balanced_distillation/data/models/"
+  model_dir = "/home/vojtechmolek/repos/unproportional/google-research/class_balanced_distillation/data/models"
   model_ids = [
       "vanilla_seed1"
   ]

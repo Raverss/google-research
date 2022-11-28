@@ -25,10 +25,10 @@ def get_config():
 
   config.dataset = "imagenet-lt"
   config.model_name = "resnet50"
-  config.sampling = "class_balanced"
+  config.sampling = "uniform"
 
   config.add_color_jitter = False
-  config.unprop = None
+  config.unprop = [1.18, 5, 7, 0.1]
   config.loss = "ce"
 
   config.learning_rate = 0.1
@@ -59,23 +59,9 @@ def get_config():
   config.trial = 0  # dummy for repeated runs.
 
   # Distillation parameters
-  model_dir = "/home/user/class_balanced_distillation/data/models/"
-  model_ids = [
-      "vanilla_seed1"
-  ]
-
-  num_teachers = len(model_ids)
+  config.proj_dim = -1
   config.distill_teacher = ""
-  for i in range(num_teachers):
-    if i == 0:
-      config.distill_teacher = "{}/{}".format(model_dir,
-                                              model_ids[i])
-    else:
-      config.distill_teacher = "{},{}/{}".format(config.distill_teacher,
-                                                 model_dir, model_ids[i])
-
-  config.proj_dim = 2048 * num_teachers
-  config.distill_alpha = 0.4
-  config.distill_fd_beta = 100.0
+  config.distill_alpha = 0.0
+  config.distill_fd_beta = 0.0
 
   return config
